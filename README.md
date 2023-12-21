@@ -1,6 +1,4 @@
 # Estudo-de-Caso-2
-
-
 CREATE DATABASE AgroBomDB;
 
 USE AgroBomDB;
@@ -16,13 +14,13 @@ CREATE TABLE Cliente (
 );
 
 CREATE TABLE Pedido (
-    NúmeroPedido INT NOT NULL,
+    numeropedido INT NOT NULL,
     DataPedido DATE,
-    ValorTotal DECIMAL(10, 2),
-    Desconto DECIMAL(5, 2),
+    ValorTotal Float,
+    Desconto Float,
     numerocliente INT ,
     
-    CONSTRAINT pk_Pedido PRIMARY KEY (NúmeroPedido),
+    CONSTRAINT pk_Pedido PRIMARY KEY (numeropedido),
     
     CONSTRAINT fk_Cliente FOREIGN KEY (numerocliente)
     REFERENCES Cliente(numeroCliente)
@@ -30,28 +28,26 @@ CREATE TABLE Pedido (
 );
 
 CREATE TABLE PedidoProduto (
-    NúmeroPedido INT,
-    NúmeroProduto INT,
-    
-     CONSTRAINT pk_PedidoProduto PRIMARY KEY (NúmeroPedido, NúmeroProduto),
+    numeropedido INT,
+    numeroproduto INT,
      
-     CONSTRAINT fk_Pedido_Produto FOREIGN KEY (NúmeroPedido) 
-     REFERENCES Pedido(NúmeroPedido) 
+     CONSTRAINT fk_Produto_Produto FOREIGN KEY (numeroproduto) 
+     REFERENCES Produto(numeroproduto) 
      ON UPDATE CASCADE ON DELETE CASCADE,
      
-     CONSTRAINT fk_Pedido_Pedido FOREIGN KEY (NúmeroProduto) 
-     REFERENCES Produto(NúmeroProduto)
+     CONSTRAINT fk_Pedido_Pedido FOREIGN KEY (numeropedido) 
+     REFERENCES Pedido(numeropedido)
      ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE Produto (
-    NúmeroProduto INT NOT NULL,
+    numeroproduto INT NOT NULL,
     Descrição VARCHAR(255),
     QuantidadeEstoque INT,
     UnidadeMedida VARCHAR(20),
-    QtdMinIdealEstoque INT
+    QtdMinIdealEstoque INT,
     
-     CONSTRAINT pk_Produto PRIMARY KEY (NúmeroProduto)
+     CONSTRAINT pk_produto PRIMARY KEY (numeroproduto)
 );
 
 CREATE TABLE Fornecedor (
@@ -61,10 +57,10 @@ CREATE TABLE Fornecedor (
 );
 
 CREATE TABLE ProdutoFornecedor (
-    NúmeroProduto INT,
+    numeroproduto INT,
     CNPJFornecedor VARCHAR(20),
-    PRIMARY KEY (NúmeroProduto, CNPJFornecedor),
-    FOREIGN KEY (NúmeroProduto) REFERENCES Produto(NúmeroProduto),
+    PRIMARY KEY (numeroproduto, CNPJFornecedor),
+    FOREIGN KEY (numeroproduto) REFERENCES Produto(numeroproduto),
     FOREIGN KEY (CNPJFornecedor) REFERENCES Fornecedor(CNPJFornecedor)
 );
 
@@ -75,21 +71,21 @@ CREATE TABLE SolicitacaoCompra (
     FOREIGN KEY (CNPJFornecedor) REFERENCES Fornecedor(CNPJFornecedor)
 );
 
-INSERT INTO Cliente (NúmeroCliente, Nome, Telefone, Endereço, NovoCliente)
+INSERT INTO Cliente (numerocliente, Nome, Telefone, Endereço, NovoCliente)
 VALUES (1, 'Joaquim Ferreira', '123-456-7890', 'Rua Alto, 123', FALSE),
        (2, 'Mario Oliveira', '987-654-3210', 'Avenida Calhau, 456', TRUE);
 
-INSERT INTO Pedido (NúmeroPedido, DataPedido, ValorTotal, Desconto, NúmeroCliente)
+INSERT INTO Pedido (numeropedido, DataPedido, ValorTotal, Desconto, numerocliente)
 VALUES (101, '18-12-2023', 500.00, 20.00, 1),
        (102, '19-12-2023', 300.00, 10.00, 2);
 
 
-INSERT INTO PedidoProduto (NúmeroPedido, NúmeroProduto)
+INSERT INTO PedidoProduto (numeropedido, numeroproduto)
 VALUES (101, 1),
        (101, 2),
        (102, 3);
 
-INSERT INTO Produto (NúmeroProduto, Descrição, QuantidadeEstoque, UnidadeMedida, QtdMinIdealEstoque)
+INSERT INTO Produto(numeroproduto, Descrição, QuantidadeEstoque, UnidadeMedida, QtdMinIdealEstoque)
 VALUES (1, 'Produto X', 50, 'Unidade', 10),
        (2, 'Produto Y', 30, 'Kg', 5),
        (3, 'Produto Z', 20, 'Litro', 8);
@@ -98,7 +94,7 @@ INSERT INTO Fornecedor (CNPJFornecedor, Nome, Telefone)
 VALUES ('12345678901234', 'Fornecedor XYZ', '111-222-3333'),
        ('56789012345678', 'Fornecedor ABC', '444-555-6666');
 
-INSERT INTO ProdutoFornecedor (NúmeroProduto, CNPJFornecedor)
+INSERT INTO ProdutoFornecedor (numeroproduto, CNPJFornecedor)
 VALUES (1, '12345678901234'),
        (2, '12345678901234'),
        (3, '56789012345678');
@@ -106,4 +102,5 @@ VALUES (1, '12345678901234'),
 INSERT INTO SolicitacaoCompra (NúmeroSolicitacao, Situação, CNPJFornecedor)
 VALUES (201, 'Em aberto', '12345678901234'),
        (202, 'Encerrada', '56789012345678');
-       
+
+select * 
