@@ -6,81 +6,80 @@ USE AgroBomDB;
 
 
 CREATE TABLE Cliente (
-    numerocliente INT NOT NULL,
+    numeroCliente INT NOT NULL,
     nome VARCHAR(255),
-    Telefone VARCHAR(20),
-    Endereço VARCHAR(255),
-    NovoCliente BOOLEAN,
+    telefone VARCHAR(20),
+    endereco VARCHAR(255),
+    novoCliente BOOLEAN,
      
-    CONSTRAINT pk_Cliente PRIMARY KEY (numerocliente)
+    CONSTRAINT pk_cliente PRIMARY KEY (numeroCliente)
 );
 
 CREATE TABLE Produto (
-    numeroproduto INT NOT NULL,
-    Descrição VARCHAR(255),
-    QuantidadeEstoque INT,
-    UnidadeMedida VARCHAR(20),
-    QtdMinIdealEstoque INT,
+    numeroProduto INT NOT NULL,
+    descricao VARCHAR(255),
+    quantidadeEstoque INT,
+    unidadeMedida VARCHAR(20),
+    qtdMinIdealEstoque INT,
     
-    CONSTRAINT pk_produto PRIMARY KEY (numeroproduto)
+    CONSTRAINT pk_produto PRIMARY KEY (numeroProduto)
 );
 
 CREATE TABLE Pedido (
-    numeropedido INT NOT NULL,
-    DataPedido DATE,
-    ValorTotal Float,
-    Desconto Float,
-    numerocliente INT,
+    numeroPedido INT NOT NULL,
+    dataPedido DATE,
+    valorTotal Float,
+    desconto Float,
+    numeroCliente INT,
     
-    CONSTRAINT pk_Pedido PRIMARY KEY (numeropedido),
+    CONSTRAINT pk_Pedido PRIMARY KEY (numeroPedido),
     
-    CONSTRAINT fk_Cliente FOREIGN KEY (numerocliente)
-    REFERENCES Cliente(numerocliente)
+    CONSTRAINT fk_Cliente FOREIGN KEY (numeroCliente)
+    REFERENCES Cliente(numeroCliente)
     ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE PedidoProduto (
-    numeropedido INT,
-    numeroproduto INT,
+    numeroPedido INT,
+    numeroProduto INT,
     
-    CONSTRAINT fk_Pedido_Pedido FOREIGN KEY (numeropedido) 
-    REFERENCES Pedido(numeropedido)
+    CONSTRAINT fk_Pedido_Pedido FOREIGN KEY (numeroPedido) 
+    REFERENCES Pedido(numeroPedido)
     ON UPDATE CASCADE ON DELETE CASCADE,
     
-    CONSTRAINT fk_Produto_Produto FOREIGN KEY (numeroproduto) 
-    REFERENCES Produto(numeroproduto) 
+    CONSTRAINT fk_Produto_Produto FOREIGN KEY (numeroProduto) 
+    REFERENCES Produto(numeroProduto) 
     ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE Fornecedor (
     CNPJFornecedor VARCHAR(20) PRIMARY KEY,
-    Nome VARCHAR(255),
-    Telefone VARCHAR(20)
+    nome VARCHAR(255),
+    telefone VARCHAR(20)
 );
 
 CREATE TABLE ProdutoFornecedor (
-    numeroproduto INT,
+    numeroProduto INT,
     CNPJFornecedor VARCHAR(20),
-    PRIMARY KEY (numeroproduto, CNPJFornecedor),
-    FOREIGN KEY (numeroproduto) REFERENCES Produto(numeroproduto),
+    PRIMARY KEY (numeroProduto, CNPJFornecedor),
+    FOREIGN KEY (numeroProduto) REFERENCES Produto(numeroProduto),
     FOREIGN KEY (CNPJFornecedor) REFERENCES Fornecedor(CNPJFornecedor)
 );
 
 CREATE TABLE SolicitacaoCompra (
-    NúmeroSolicitacao INT PRIMARY KEY,
-    Situação VARCHAR(20),
+    numeroSolicitacao INT PRIMARY KEY,
+    situacao VARCHAR(20),
     CNPJFornecedor VARCHAR(20),
     FOREIGN KEY (CNPJFornecedor) REFERENCES Fornecedor(CNPJFornecedor)
 );
-
 
 INSERT INTO Cliente (numerocliente, Nome, Telefone, Endereço, NovoCliente)
 VALUES (1, 'Joaquim Ferreira', '123-456-7890', 'Rua Alto, 123', FALSE),
        (2, 'Mario Oliveira', '987-654-3210', 'Avenida Calhau, 456', TRUE);
 
 INSERT INTO Pedido (numeropedido, DataPedido, ValorTotal, Desconto, numerocliente)
-VALUES (101, '18-12-2023', 500.00, 20.00, 1),
-       (102, '19-12-2023', 300.00, 10.00, 2);
+VALUES (101, '2023-12-18', 500.00, 20.00, 1),
+	   (102, '2023-12-19', 300.00, 10.00, 2);
 
 
 INSERT INTO PedidoProduto (numeropedido, numeroproduto)
@@ -105,12 +104,12 @@ VALUES (1, '12345678901234'),
 INSERT INTO SolicitacaoCompra (NúmeroSolicitacao, Situação, CNPJFornecedor)
 VALUES (201, 'Em aberto', '12345678901234'),
        (202, 'Encerrada', '56789012345678');
-
-/* 1-Selecionar todos os clientes*/
+       
+     /* 1-Selecionar todos os clientes*/
 /*SELECT * FROM Cliente;
 
 /*2-Selecionar todos os pedidos com detalhes do cliente*/
-/*SELECT Pedido.*, Cliente.Nome AS NomeCliente
+/*SELECT Pedido.*, Cliente.nome AS nomeCliente
 FROM Pedido
 JOIN Cliente ON Pedido.NúmeroCliente = Cliente.NúmeroCliente;
 
@@ -120,13 +119,13 @@ FROM PedidoProduto
 GROUP BY NúmeroPedido;
 
 /*4-Listar todos os produtos em estoque*/
-/*SELECT * FROM Produto WHERE QuantidadeEstoque > 0;
+/*SELECT * FROM Produto WHERE quantidadeEstoque > 0;
 
 /*5-Mostrar os fornecedores de cada produto*/
-/*SELECT Produto.*, Fornecedor.Nome AS NomeFornecedor
+/*SELECT Produto.*, Fornecedor.nome AS nomeFornecedor
 FROM Produto
 JOIN ProdutoFornecedor ON Produto.NúmeroProduto = ProdutoFornecedor.NúmeroProduto
 JOIN Fornecedor ON ProdutoFornecedor.CNPJFornecedor = Fornecedor.CNPJFornecedor;
 
 /*6-Exibir as solicitações de compra encerradas*/
-/*SELECT * FROM SolicitacaoCompra WHERE Situação = 'Encerrada';
+/*SELECT * FROM SolicitacaoCompra WHERE situacao = 'Encerrada';
